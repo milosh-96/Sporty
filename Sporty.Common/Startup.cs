@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using OrchardCore.ContentManagement;
 using OrchardCore.Modules;
+using Sporty.Sports.Handlers;
+using Sporty.Sports.Migrations;
+using Sporty.Sports.Models;
 
 namespace Sporty.Sports
 {
@@ -9,16 +13,12 @@ namespace Sporty.Sports
     {
         public override void ConfigureServices(IServiceCollection services)
         {
+            services.AddContentPart<TeamPart>().WithMigration<TeamMigrations>().AddHandler<TeamPartHandler>();
         }
 
         public override void Configure(IApplicationBuilder builder, IEndpointRouteBuilder routes, IServiceProvider serviceProvider)
         {
-            routes.MapAreaControllerRoute(
-                name: "Home",
-                areaName: "Sporty.Common",
-                pattern: "Home/Index",
-                defaults: new { controller = "Home", action = "Index" }
-            );
+           
         }
     }
 
