@@ -14,6 +14,7 @@ namespace Sporty.Sports
         public override void ConfigureServices(IServiceCollection services)
         {
             services.AddContentPart<TeamPart>().WithMigration<TeamMigrations>().AddHandler<TeamPartHandler>();
+            services.AddContentPart<MatchPart>().WithMigration<MatchMigrations>().AddHandler<MatchPartHandler>();
         }
 
         public override void Configure(IApplicationBuilder builder, IEndpointRouteBuilder routes, IServiceProvider serviceProvider)
