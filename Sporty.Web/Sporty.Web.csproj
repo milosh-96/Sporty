@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sporty.Sports\Sporty.Sports.csproj" />
+    <ProjectReference Include="..\TestTheme\TestTheme.csproj" />
   </ItemGroup>
 
 </Project>
