@@ -38,16 +38,16 @@ namespace Sporty.Sports.Tests
         }
 
         [Fact]
-        public void GoalDifferenceIsInvalid()
+        public void PointsAreCorrect()
         {
-            var actual = _calculator.CalculateGoalDifference(_results, "1");
-            var expected = 0;
+            var actual = _calculator.CalculatePoints(_results, "1");
+            var expected = 4;
 
-            Assert.NotEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void GoalDifferenceIsValid()
+        public void GoalDifferenceIsCorrect()
         {
             var actual = _calculator.CalculateGoalDifference(_results, "1");
             var expected = 0;
@@ -93,36 +93,39 @@ namespace Sporty.Sports.Tests
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public void GoalDifferenceForMatchIsInvalid()
+     
+        [Theory]
+        [InlineData(1,4,-3)]
+        [InlineData(0,6,-6)]
+        [InlineData(1,3,-2)]
+        [InlineData(1,2,-1)]
+        [InlineData(5,1,4)]
+        [InlineData(3,1,2)]
+        [InlineData(10,1,9)]
+        [InlineData(1,1,0)]
+        [InlineData(2,2,0)]
+        [InlineData(0,0,0)]
+        public void GoalDifferenceForMatchIsCorrect(int teamScore, int opponentScore, int expected)
         {
-            var actual = _calculator.CalculateGoalDifferenceForTeamPerMatch(3, 3);
-            var expected = 0;
-            Assert.NotEqual(expected, actual);
-        }
-
-        [Fact]
-        public void GoalDifferenceForMatchIsValid()
-        {
-            var actual = _calculator.CalculateGoalDifferenceForTeamPerMatch(3, 3);
-            var expected = 0;
+            var actual = _calculator.CalculateGoalDifferenceForTeamPerMatch(teamScore, opponentScore);
             Assert.Equal(expected, actual);
         }
-
-        [Fact]
-        public void GoalDifferenceForMatchIsNegative()
+        
+        [Theory]
+        [InlineData(1,4,0)]
+        [InlineData(0,6,0)]
+        [InlineData(1,3,0)]
+        [InlineData(1,2,0)]
+        [InlineData(5,1,3)]
+        [InlineData(3,1,3)]
+        [InlineData(10,1,3)]
+        [InlineData(1,1,1)]
+        [InlineData(2,2,1)]
+        [InlineData(0,0,1)]
+        public void PointsForMatchIsCorrect(int teamScore, int opponentScore, int expected)
         {
-            var actual = _calculator.CalculateGoalDifferenceForTeamPerMatch(1, 3);
-            var expected = -2;
+            var actual = _calculator.CalculatePointsForTeamPerMatch(teamScore, opponentScore);
             Assert.Equal(expected, actual);
         }
-        [Fact]
-        public void GoalDifferenceForMatchIsPositive()
-        {
-            var actual = _calculator.CalculateGoalDifferenceForTeamPerMatch(3, 1);
-            var expected = 2;
-            Assert.Equal(expected, actual);
-        }
-
     }
 }
