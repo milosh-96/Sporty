@@ -11,26 +11,28 @@ namespace Sporty.Sports.Services
     public class StandingsCalculator
     {
 
-        public int ProcessMatchResult(List<MatchPart> results, string teamId, Func<int, int, int> action)
+        private int ProcessMatchResults(List<MatchPart> results, string teamId, Func<int, int, int> action)
         {
-            int result = 0;
+            int sum = 0;
             foreach (MatchPart part in results)
             {
+                int teamAscore = (int)part.TeamAScore.Value;
+                int teamBscore = (int)part.TeamBScore.Value;
                 if (part.TeamA.ContentItemIds.Contains(teamId))
                 {
-                    result += action((int)part.TeamAScore.Value, (int)part.TeamBScore.Value);
+                    sum += action(teamAscore, teamBscore);
                 }
                 if (part.TeamB.ContentItemIds.Contains(teamId))
                 {
-                    result += action((int)part.TeamBScore.Value, (int)part.TeamAScore.Value);
+                    sum += action(teamBscore, teamAscore);
                 }
             }
 
-            return result;
+            return sum;
         }
         public int CalculateGoalDifference(List<MatchPart> results, string teamId)
         {
-            return ProcessMatchResult(results, teamId, CalculateGoalDifferenceForTeamPerMatch);
+            return ProcessMatchResults(results, teamId, CalculateGoalDifferenceForTeamPerMatch);
         }
 
         public int CalculateGoalDifferenceForTeamPerMatch(int teamScore, int opponentScore)
@@ -40,7 +42,7 @@ namespace Sporty.Sports.Services
 
         public int CalculatePoints(List<MatchPart> results, string teamId)
         {
-            return ProcessMatchResult(results, teamId, CalculatePointsForTeamPerMatch);
+            return ProcessMatchResults(results, teamId, CalculatePointsForTeamPerMatch);
         }
 
         public int CalculatePointsForTeamPerMatch(int teamScore, int opponentScore)
