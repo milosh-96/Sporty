@@ -11,7 +11,7 @@ namespace Sporty.Sports.Services
     public class StandingsCalculator
     {
 
-        private int ProcessMatchResults(List<MatchPart> results, string teamId, Func<int, int, int> action)
+        private static int ProcessMatchResults(List<MatchPart> results, string teamId, Func<int, int, int> action)
         {
             int sum = 0;
             foreach (MatchPart part in results)
@@ -32,17 +32,40 @@ namespace Sporty.Sports.Services
         }
         public int CalculateGoalDifference(List<MatchPart> results, string teamId)
         {
-            return ProcessMatchResults(results, teamId, CalculateGoalDifferenceForTeamPerMatch);
+            return CalculateScoredGoals(results, teamId) - CalculateConcededGaols(results, teamId);
+        }
+        public int CalculateScoredGoals(List<MatchPart> results, string teamId)
+        {
+            return ProcessMatchResults(results, teamId, CalculateScoredGoalsForTeamPerMatch);
+
+        }
+        public int CalculateConcededGaols(List<MatchPart> results, string teamId)
+        {
+            return ProcessMatchResults(results, teamId, CalculateConcededGoalsForTeamPerMatch);
+        }
+        public int CalculatePoints(List<MatchPart> results, string teamId)
+        {
+            return ProcessMatchResults(results, teamId, CalculatePointsForTeamPerMatch);
+        }
+
+        public int CalculateWins(List<MatchPart> results, string teamId)
+        {
+            return ProcessMatchResults(results, teamId, CalculateWinsForTeamPerMatch);
+        }
+
+        public int CalculateDraws(List<MatchPart> results, string teamId)
+        {
+            return ProcessMatchResults(results, teamId, CalculateDrawsForTeamPerMatch);
+        }
+
+        public int CalculateLosses(List<MatchPart> results, string teamId)
+        {
+            return ProcessMatchResults(results, teamId, CalculateLossesForTeamPerMatch);
         }
 
         public int CalculateGoalDifferenceForTeamPerMatch(int teamScore, int opponentScore)
         {
             return teamScore - opponentScore;
-        }
-
-        public int CalculatePoints(List<MatchPart> results, string teamId)
-        {
-            return ProcessMatchResults(results, teamId, CalculatePointsForTeamPerMatch);
         }
 
         public int CalculatePointsForTeamPerMatch(int teamScore, int opponentScore)
@@ -51,12 +74,63 @@ namespace Sporty.Sports.Services
             {
                 return FootballDefaultValues.POINTS_FOR_WIN;
             }
-            else if(teamScore == opponentScore)
+            else if (teamScore == opponentScore)
             {
                 return FootballDefaultValues.POINTS_FOR_DRAW;
             }
 
             return FootballDefaultValues.POINTS_FOR_LOSS;
         }
+
+        public int CalculateWinsForTeamPerMatch(int teamScore, int opponentScore)
+        {
+            if (teamScore > opponentScore)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public int CalculateDrawsForTeamPerMatch(int teamScore, int opponentScore)
+        {
+            if (teamScore == opponentScore)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public int CalculateLossesForTeamPerMatch(int teamScore, int opponentScore)
+        {
+            if (teamScore < opponentScore)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public int CalculateMatchesPlayed(List<MatchPart> results, string teamId)
+        {
+            int sum = 0;
+            foreach (MatchPart part in results)
+            {
+                if (part.TeamA.ContentItemIds.Contains(teamId) || part.TeamB.ContentItemIds.Contains(teamId))
+                {
+                    sum += 1;
+                }
+            }
+            return sum;
+        }
+
+        public int CalculateScoredGoalsForTeamPerMatch(int teamScore, int opponentScore)
+        {
+            return teamScore;
+        }
+
+        public int CalculateConcededGoalsForTeamPerMatch(int teamScore, int opponentScore)
+        {
+            return opponentScore;
+        }
     }
+
 }
