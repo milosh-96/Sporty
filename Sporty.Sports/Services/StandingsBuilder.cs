@@ -11,41 +11,18 @@ namespace Sporty.Sports.Services
     public class StandingsBuilder : IStandingsBuilder
     {
         private readonly StandingsCalculator _calculator;
-        private readonly List<MatchPart> _results = new List<MatchPart>()
-            {
-                new MatchPart()
-        {
-            TeamA = new ContentPickerField() { ContentItemIds = ["1"] },
-                    TeamB = new ContentPickerField() { ContentItemIds = ["2"] },
-                    TeamAScore = new NumericField() { Value = 1 },
-                    TeamBScore = new NumericField() { Value = 3 },
-                },
-                new MatchPart()
-        {
-            TeamA = new ContentPickerField() { ContentItemIds = ["1"] },
-                    TeamB = new ContentPickerField() { ContentItemIds = ["3"] },
-                    TeamAScore = new NumericField() { Value = 4 },
-                    TeamBScore = new NumericField() { Value = 2 },
-                },
-                new MatchPart()
-        {
-            TeamA = new ContentPickerField() { ContentItemIds = ["4"] },
-                    TeamB = new ContentPickerField() { ContentItemIds = ["1"] },
-                    TeamAScore = new NumericField() { Value = 2 },
-                    TeamBScore = new NumericField() { Value = 2 },
-                }
-        };
-
+        private List<MatchPart> _results;
         public StandingsBuilder()
         {
             _calculator = new StandingsCalculator();
         }
 
-        public IEnumerable<StandingsItem> Build()
+        public IEnumerable<StandingsItem> Build(List<MatchPart> results)
         {
+            _results = results;
             List<StandingsItem> standings = new List<StandingsItem>();
 
-            foreach (var item in _results)
+            foreach (var item in results)
             {
                 if (!standings.Any(
                     standingsItem => standingsItem.Team.ContentItem.ContentItemId == item.TeamA.ContentItemIds.First()))

@@ -10,6 +10,6 @@ namespace Sporty.Sports.Services
     public interface IStandingsBuilder
     {
         public StandingsItem ProcessTeam(string id);
-        public IEnumerable<StandingsItem> Build();
+        public IEnumerable<StandingsItem> Build(List<MatchPart> results);
     }
 }
