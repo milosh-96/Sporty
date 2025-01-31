@@ -32,14 +32,14 @@ namespace Sporty.Sports.Services
         }
         public int CalculateGoalDifference(List<MatchPart> results, string teamId)
         {
-            return CalculateScoredGoals(results, teamId) - CalculateConcededGaols(results, teamId);
+            return CalculateScoredGoals(results, teamId) - CalculateConcededGoals(results, teamId);
         }
         public int CalculateScoredGoals(List<MatchPart> results, string teamId)
         {
             return ProcessMatchResults(results, teamId, CalculateScoredGoalsForTeamPerMatch);
 
         }
-        public int CalculateConcededGaols(List<MatchPart> results, string teamId)
+        public int CalculateConcededGoals(List<MatchPart> results, string teamId)
         {
             return ProcessMatchResults(results, teamId, CalculateConcededGoalsForTeamPerMatch);
         }

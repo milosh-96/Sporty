@@ -123,7 +123,7 @@ namespace Sporty.Sports.Tests
                     TeamBScore = new NumericField() { Value = 5 },
                 });
 
-            var actual = _calculator.CalculateConcededGaols(_results, "1");
+            var actual = _calculator.CalculateConcededGoals(_results, "1");
             var expected = 7;
 
             Assert.Equal(expected, actual);
