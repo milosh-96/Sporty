@@ -1,5 +1,6 @@
 ﻿using OrchardCore.ContentFields.Fields;
 using OrchardCore.ContentManagement;
+using Sporty.Sports.Constants;
 using Sporty.Sports.Models;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Sporty.Sports.Indexes
 
         public int TeamAScore { get; set; } = 0;
         public int TeamBScore { get; set; } = 0;
+        public string EventStatus { get; set; } = EventStatuses.Scheduled;
     }
 
     public class MatchPartIndexProvider : IndexProvider<ContentItem>
@@ -36,6 +38,7 @@ namespace Sporty.Sports.Indexes
                         TeamAScore = matchPart.TeamAScore.Value != null ? (int)matchPart.TeamAScore.Value : 0,
                         TeamB = matchPart.TeamB.ContentItemIds[0],
                         TeamBScore = matchPart.TeamBScore.Value != null ? (int)matchPart.TeamBScore.Value : 0,
+                        EventStatus = matchPart.EventStatus.Text,
                     };
                 });
     }

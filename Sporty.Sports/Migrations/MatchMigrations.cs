@@ -5,6 +5,7 @@ using OrchardCore.ContentManagement.Metadata.Settings;
 using OrchardCore.Data.Migration;
 using OrchardCore.Media.Fields;
 using OrchardCore.Media.Settings;
+using Sporty.Sports.Constants;
 using Sporty.Sports.Indexes;
 using Sporty.Sports.Models;
 using System;
@@ -91,7 +92,25 @@ namespace Sporty.Sports.Migrations
                         .WithPosition("5")
                         ;
                 });
-
+                part.WithField(nameof(MatchPart.EventStatus), field =>
+                {
+                    field
+                        .OfType(nameof(TextField))
+                        .WithEditor(nameof(TextFieldEditors.PredefinedList))
+                        .WithDisplayName("Event Status")
+                        .WithSettings(
+                            new TextFieldPredefinedListEditorSettings
+                            {
+                                Options = [
+                                    FinishedValueOption,
+                                    ScheduledValueOption,
+                                    PostponedValueOption,
+                                    CancelledValueOption
+                                ],
+                                DefaultValue = EventStatuses.Scheduled,
+                                Editor = EditorOption.Dropdown,
+                            });
+                });
             });
 
             await _contentDefinitionManager.AlterTypeDefinitionAsync("Match", type =>
@@ -106,242 +125,51 @@ namespace Sporty.Sports.Migrations
                 table.Column<string>(nameof(MatchPartIndex.TeamAScore));
                 table.Column<string>(nameof(MatchPartIndex.TeamB));
                 table.Column<string>(nameof(MatchPartIndex.TeamBScore));
+                table.Column<string>(nameof(MatchPartIndex.EventStatus));
             });
 
             await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.ContenttemId)}", nameof(MatchPartIndex.ContenttemId))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamA)}", nameof(MatchPartIndex.TeamA))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamAScore)}", nameof(MatchPartIndex.TeamAScore))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamB)}", nameof(MatchPartIndex.TeamB))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamBScore)}", nameof(MatchPartIndex.TeamBScore))
-       );
+                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.ContenttemId)}", nameof(MatchPartIndex.ContenttemId))
+            );
+            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
+                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamA)}", nameof(MatchPartIndex.TeamA))
+            );
+            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
+                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamAScore)}", nameof(MatchPartIndex.TeamAScore))
+            );
+            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
+                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamB)}", nameof(MatchPartIndex.TeamB))
+            );
+            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
+                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamBScore)}", nameof(MatchPartIndex.TeamBScore))
+            );
+            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
+                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.EventStatus)}", nameof(MatchPartIndex.EventStatus))
+            );
 
-            return 4;
+            return 1;
         }
 
-        public async Task<int> UpdateFrom1Async()
+        private static readonly ListValueOption FinishedValueOption = new()
         {
-            await _contentDefinitionManager.AlterTypeDefinitionAsync("Match", type =>
-            {
-                type.Listable().Creatable().Draftable().WithPart(nameof(MatchPart));
-            });
-
-            await SchemaBuilder.CreateMapIndexTableAsync<MatchPartIndex>(table =>
-            {
-                table.Column<string>(nameof(MatchPartIndex.ContenttemId));
-                table.Column<string>(nameof(MatchPartIndex.TeamA));
-                table.Column<string>(nameof(MatchPartIndex.TeamB));
-            });
-
-            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.ContenttemId)}", nameof(MatchPartIndex.ContenttemId))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamA)}", nameof(MatchPartIndex.TeamA))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamB)}", nameof(MatchPartIndex.TeamB))
-       );
-
-            return 2;
-        }
-
-        public async Task<int> UpdateFrom2Async()
+            Name = nameof(EventStatuses.Finished),
+            Value = EventStatuses.Finished,
+        };
+        private static readonly ListValueOption ScheduledValueOption = new()
         {
-
-            await _contentDefinitionManager.AlterPartDefinitionAsync(nameof(MatchPart), part =>
-            {
-                part.WithField(nameof(MatchPart.TeamA), field =>
-                {
-                    field
-                        .OfType(nameof(ContentPickerField))
-                        .WithSettings(new ContentPickerFieldSettings()
-                        {
-                            Multiple = false,
-                            DisplayedContentTypes = new[] { "Team" },
-                            Required = true
-                        })
-                        .WithPosition("1")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.TeamAScore), field =>
-                {
-                    field
-                        .OfType(nameof(NumericField))
-                        .WithSettings(new NumericFieldSettings()
-                        {
-                            Required = true,
-                            DefaultValue = "0",
-                        })
-                        .WithPosition("2")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.TeamB), field =>
-                {
-                    field
-                        .OfType(nameof(ContentPickerField))
-                        .WithSettings(new ContentPickerFieldSettings()
-                        {
-                            Multiple = false,
-                            DisplayedContentTypes = new[] { "Team" },
-                            Required = true
-                        })
-                        .WithPosition("3")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.TeamBScore), field =>
-                {
-                    field
-                        .OfType(nameof(NumericField))
-                        .WithSettings(new NumericFieldSettings()
-                        {
-                            Required = true,
-                            DefaultValue = "0",
-                        })
-                        .WithPosition("4")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.StartDate), field =>
-                {
-                    field
-                        .OfType(nameof(DateTimeField))
-                        .WithSettings(new DateTimeFieldSettings()
-                        {
-                            Required = true
-                        })
-                        .WithPosition("5")
-                        ;
-                });
-
-            });
-
-            await _contentDefinitionManager.AlterTypeDefinitionAsync("Match", type =>
-            {
-                type.Listable().Creatable().Draftable().WithPart(nameof(MatchPart));
-            });
-
-            await SchemaBuilder.DropMapIndexTableAsync<MatchPartIndex>();
-            await SchemaBuilder.CreateMapIndexTableAsync<MatchPartIndex>(table =>
-            {
-                table.Column<string>(nameof(MatchPartIndex.ContenttemId));
-                table.Column<string>(nameof(MatchPartIndex.TeamA));
-                table.Column<string>(nameof(MatchPartIndex.TeamAScore));
-                table.Column<string>(nameof(MatchPartIndex.TeamB));
-                table.Column<string>(nameof(MatchPartIndex.TeamBScore));
-            });
-
-            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.ContenttemId)}", nameof(MatchPartIndex.ContenttemId))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamA)}", nameof(MatchPartIndex.TeamA))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamAScore)}", nameof(MatchPartIndex.TeamAScore))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamB)}", nameof(MatchPartIndex.TeamB))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamBScore)}", nameof(MatchPartIndex.TeamBScore))
-       );
-
-            return 3;
-        }
-
-        public async Task<int> UpdateFrom3Async()
+            Name = nameof(EventStatuses.Scheduled),
+            Value = EventStatuses.Scheduled,
+        };
+        private static readonly ListValueOption PostponedValueOption = new()
         {
-            await _contentDefinitionManager.AlterPartDefinitionAsync(nameof(MatchPart), part =>
-            {
-                part.WithField(nameof(MatchPart.TeamA), field =>
-                {
-                    field
-                        .OfType(nameof(ContentPickerField))
-                        .WithSettings(new ContentPickerFieldSettings()
-                        {
-                            Multiple = false,
-                            DisplayedContentTypes = new[] { "Team" },
-                            Required = true
-                        })
-                        .WithPosition("1")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.TeamAScore), field =>
-                {
-                    field
-                        .OfType(nameof(NumericField))
-                        .WithSettings(new NumericFieldSettings()
-                        {
-                            Required = true,
-                            DefaultValue = "0",
-                        })
-                        .WithPosition("2")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.TeamB), field =>
-                {
-                    field
-                        .OfType(nameof(ContentPickerField))
-                        .WithSettings(new ContentPickerFieldSettings()
-                        {
-                            Multiple = false,
-                            DisplayedContentTypes = new[] { "Team" },
-                            Required = true
-                        })
-                        .WithPosition("3")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.TeamBScore), field =>
-                {
-                    field
-                        .OfType(nameof(NumericField))
-                        .WithSettings(new NumericFieldSettings()
-                        {
-                            Required = true,
-                            DefaultValue = "0",
-                        })
-                        .WithPosition("4")
-                        ;
-                });
-                part.WithField(nameof(MatchPart.StartDate), field =>
-                {
-                    field
-                        .OfType(nameof(DateTimeField))
-                        .WithSettings(new DateTimeFieldSettings()
-                        {
-                            Required = true
-                        })
-                        .WithPosition("5")
-                        ;
-                });
+            Name = nameof(EventStatuses.Postponed),
+            Value = EventStatuses.Postponed,
+        };
+        private static readonly ListValueOption CancelledValueOption = new()
+        {
+            Name = nameof(EventStatuses.Cancelled),
+            Value = EventStatuses.Cancelled,
+        };
 
-            });
-
-            await _contentDefinitionManager.AlterTypeDefinitionAsync("Match", type =>
-            {
-                type.Listable().Creatable().Draftable().WithPart(nameof(MatchPart));
-            });
-
-            await SchemaBuilder.DropMapIndexTableAsync<MatchPartIndex>();
-            await SchemaBuilder.CreateMapIndexTableAsync<MatchPartIndex>(table =>
-            {
-                table.Column<string>(nameof(MatchPartIndex.ContenttemId));
-                table.Column<string>(nameof(MatchPartIndex.TeamA));
-                table.Column<string>(nameof(MatchPartIndex.TeamAScore));
-                table.Column<string>(nameof(MatchPartIndex.TeamB));
-                table.Column<string>(nameof(MatchPartIndex.TeamBScore));
-            });
-
-            await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.ContenttemId)}", nameof(MatchPartIndex.ContenttemId))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamA)}", nameof(MatchPartIndex.TeamA))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamAScore)}", nameof(MatchPartIndex.TeamAScore))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamB)}", nameof(MatchPartIndex.TeamB))
-       ); await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-           .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamBScore)}", nameof(MatchPartIndex.TeamBScore))
-       );
-            return 4;
-        }
     }
 }

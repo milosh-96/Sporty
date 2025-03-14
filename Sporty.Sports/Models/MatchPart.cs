@@ -1,10 +1,6 @@
 ﻿using OrchardCore.ContentFields.Fields;
 using OrchardCore.ContentManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sporty.Sports.Constants;
 
 namespace Sporty.Sports.Models
 {
@@ -16,6 +12,8 @@ namespace Sporty.Sports.Models
         public NumericField TeamBScore { get; set; } = new();
 
         public DateTimeField StartDate { get; set; } = new();
+
+        public TextField EventStatus { get; set; } = new ();
 
     }
 }
