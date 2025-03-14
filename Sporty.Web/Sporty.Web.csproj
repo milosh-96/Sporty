@@ -18,14 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OrchardCore.AutoSetup" Version="2.0.2" />
-    <PackageReference Include="OrchardCore.Logging.NLog" Version="2.0.2" />
-    <PackageReference Include="OrchardCore.Application.Cms.Targets" Version="2.0.2" />
+    <PackageReference Include="OrchardCore.AutoSetup" Version="2.1.6" />
+    <PackageReference Include="OrchardCore.Logging.NLog" Version="2.1.6" />
+    <PackageReference Include="OrchardCore.Application.Cms.Targets" Version="2.1.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sporty.Sports\Sporty.Sports.csproj" />
-    <ProjectReference Include="..\TestTheme\TestTheme.csproj" />
   </ItemGroup>
 
 </Project>
