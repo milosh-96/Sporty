@@ -8,6 +8,7 @@ using Sporty.Sports.Handlers;
 using Sporty.Sports.Indexes;
 using Sporty.Sports.Migrations;
 using Sporty.Sports.Models;
+using Sporty.Sports.Services;
 
 namespace Sporty.Sports
 {
@@ -15,6 +16,7 @@ namespace Sporty.Sports
     {
         public override void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IStandingsBuilder, StandingsBuilder>();
             services.AddContentPart<TeamPart>().WithMigration<TeamMigrations>().AddHandler<TeamPartHandler>();
             services.AddContentPart<MatchPart>().WithMigration<MatchMigrations>().AddHandler<MatchPartHandler>();
             services.AddIndexProvider<MatchPartIndexProvider>();

@@ -1,6 +1,7 @@
 ﻿using OrchardCore.ContentFields.Fields;
 using Sporty.Sports.Models;
 using Sporty.Sports.Services;
+using Sporty.Sports.Tests.Samples;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Sporty.Sports.Tests
 
         public StandingsBuilderTests()
         {
-            _builder = new StandingsBuilder();
+            _builder = new StandingsBuilderDemo();
         }
 
         [Fact]

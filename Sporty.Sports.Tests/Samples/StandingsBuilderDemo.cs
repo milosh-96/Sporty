@@ -1,17 +1,20 @@
-﻿using OrchardCore.ContentManagement;
-using Sporty.Sports.Models;
+﻿using Sporty.Sports.Models;
+using Sporty.Sports.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Sporty.Sports.Services
+namespace Sporty.Sports.Tests.Samples
 {
-    public class StandingsBuilder : IStandingsBuilder
+    public class StandingsBuilderDemo : IStandingsBuilder
     {
         private readonly StandingsCalculator _calculator;
         private List<MatchPart> _results;
-        private readonly IContentManager _contentManager;
-        public StandingsBuilder(IContentManager contentManager)
+        public StandingsBuilderDemo()
         {
             _calculator = new StandingsCalculator();
-            _contentManager = contentManager;
         }
 
         public IEnumerable<StandingsItem> Build(List<MatchPart> results)
@@ -38,7 +41,7 @@ namespace Sporty.Sports.Services
 
         public StandingsItem ProcessTeam(string id)
         {
-            var team = new StandingsItem() {  Team = _contentManager.GetAsync(id).Result.As<TeamPart>() };
+            var team = new StandingsItem() { Team = new TeamPart() { ContentItem = new OrchardCore.ContentManagement.ContentItem { ContentItemId = id } } };
 
             team.Points = _calculator.CalculatePoints(_results, team.Team.ContentItem.ContentItemId);
             team.GoalsConceded = _calculator.CalculateConcededGoals(_results, team.Team.ContentItem.ContentItemId);
