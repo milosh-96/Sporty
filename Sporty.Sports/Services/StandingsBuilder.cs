@@ -44,7 +44,10 @@ namespace Sporty.Sports.Services
             team.GoalsConceded = _calculator.CalculateConcededGoals(_results, team.Team.ContentItem.ContentItemId);
             team.GoalsScored = _calculator.CalculateScoredGoals(_results, team.Team.ContentItem.ContentItemId);
             team.GoalDifference = _calculator.CalculateGoalDifference(_results, team.Team.ContentItem.ContentItemId);
+            team.Played = _calculator.CalculateMatchesPlayed(_results, team.Team.ContentItem.ContentItemId);
             team.Wins = _calculator.CalculateWins(_results, team.Team.ContentItem.ContentItemId);
+            team.Draws = _calculator.CalculateDraws(_results, team.Team.ContentItem.ContentItemId);
+            team.Losses = _calculator.CalculateLosses(_results, team.Team.ContentItem.ContentItemId);
 
             return team;
         }

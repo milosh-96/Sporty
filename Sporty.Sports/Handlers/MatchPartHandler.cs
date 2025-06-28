@@ -33,5 +33,10 @@ namespace Sporty.Sports.Handlers
 
             return string.Format("{0}-{1}", teamA.DisplayText, teamB.DisplayText);
         }
+
+        private async Task RefreshStandingsContentItem()
+        {
+
+        }
     }
 }
