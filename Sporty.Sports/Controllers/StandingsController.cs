@@ -30,7 +30,8 @@ namespace Sporty.Sports.Controllers
         {
             var matches = (await session.QueryIndex<MatchPartIndex>().ListAsync()).Select(
                index => contentManager.GetAsync(index.ContenttemId).Result.As<MatchPart>()).ToList();
-            return new JsonResult(builder.Build(matches));
+            var standings = builder.Build(matches);
+            return new JsonResult(standings.OrderByDescending(team => team.Points).ThenByDescending(team=>team.GoalDifference));
         }
     }
 }
