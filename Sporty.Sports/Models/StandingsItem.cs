@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sporty.Sports.Models
 {
-    public class StandingsItem
+    public class StandingsItem : IComparable<StandingsItem>
     {
         public TeamPart Team { get; set; } = new TeamPart();
 
@@ -18,5 +18,20 @@ namespace Sporty.Sports.Models
         public int GoalsScored { get; set; } = 0;
         public int GoalsConceded { get; set; } = 0;
         public int GoalDifference { get; set; } = 0;
+
+        public int CompareTo(StandingsItem other)
+        {
+            int result = other.Points.CompareTo(Points);
+            if(result == 0)
+            {
+                result = other.GoalDifference.CompareTo(GoalDifference);
+                if(result == 0)
+                {
+                    result = other.GoalsScored.CompareTo(GoalsScored);
+                    return result;
+                }
+            }
+            return result;
+        }
     }
 }

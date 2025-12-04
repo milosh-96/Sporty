@@ -1,0 +1,56 @@
+@using OrchardCore.ContentManagement
+@using Sporty.Sports.Models
+@model GetStandingsViewModel
+@inject IContentManager contentManager
+<section>
+    <table>
+        <thead>
+            <tr>
+                <th>Pos</th>
+                <th>Team</th>
+                <th>Played</th>
+                <th>Wins</th>
+                <th>Draws</th>
+                <th>Losses</th>
+                <th>Goals scored</th>
+                <th>Goal conceded</th>
+                <th>Goal difference</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int pos = 0;}
+            @foreach(var item in Model.Standings)
+            {
+                pos++;
+                <tr>
+                    <td>@pos</td>
+                    <td>@item.Team.Name.Text.ToUpper()</td>
+                    <td>@item.Played</td>
+                    <td>@item.Wins</td>
+                    <td>@item.Draws</td>
+                    <td>@item.Losses</td>
+                    <td>@item.GoalsScored</td>
+                    <td>@item.GoalsConceded</td>
+                    <td>@item.GoalDifference</td>
+                    <td><strong>@item.Points</strong></td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <hr />
+    <h3>
+        Matches
+    </h3>
+    <table>
+        @foreach (var item in Model.Matches)
+        {
+            <tr>
+                <td>@{var teamA = (await contentManager.GetAsync(item.TeamA.ContentItemIds[0])).DisplayText;} @teamA</td>
+                <td>@item.TeamAScore.Value-@item.TeamBScore.Value</td>
+                <td>@{var teamB = (await contentManager.GetAsync(item.TeamB.ContentItemIds[0])).DisplayText;} @teamB</td>
+            </tr>
+        }
+    </table>
+</section>

@@ -13,7 +13,7 @@ namespace Sporty.Sports.Indexes
 {
     public class MatchPartIndex : MapIndex
     {
-        public string? ContenttemId { get; set; }
+        public string? ContentItemId { get; set; }
         public string TeamA { get; set; } = "";
         public string TeamB { get; set; } = "";
 
@@ -33,7 +33,7 @@ namespace Sporty.Sports.Indexes
                     var matchPart = contentItem.As<MatchPart>();
                     return new MatchPartIndex()
                     {
-                        ContenttemId = contentItem.ContentItemId,
+                        ContentItemId = contentItem.ContentItemId,
                         TeamA = matchPart.TeamA.ContentItemIds[0],
                         TeamAScore = matchPart.TeamAScore.Value != null ? (int)matchPart.TeamAScore.Value : 0,
                         TeamB = matchPart.TeamB.ContentItemIds[0],

@@ -29,9 +29,17 @@ namespace Sporty.Sports.Controllers
         public async Task<IActionResult> GetStandings()
         {
             var matches = (await session.QueryIndex<MatchPartIndex>().ListAsync()).Select(
-               index => contentManager.GetAsync(index.ContenttemId).Result.As<MatchPart>()).ToList();
-            var standings = builder.Build(matches);
-            return new JsonResult(standings.OrderByDescending(team => team.Points).ThenByDescending(team=>team.GoalDifference));
+               index => contentManager.GetAsync(index.ContentItemId).Result.As<MatchPart>()).ToList();
+            var standings = builder.Build(matches).ToList();
+            standings.Sort();
+            return View(new GetStandingsViewModel() { Matches = matches, Standings = standings});
         }
     }
+
+    
+}
+public class GetStandingsViewModel
+{
+    public List<StandingsItem> Standings { get; init; } = new();
+    public List<MatchPart> Matches { get; init; } = new();
 }

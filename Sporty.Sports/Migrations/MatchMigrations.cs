@@ -120,7 +120,7 @@ namespace Sporty.Sports.Migrations
 
             await SchemaBuilder.CreateMapIndexTableAsync<MatchPartIndex>(table =>
             {
-                table.Column<string>(nameof(MatchPartIndex.ContenttemId));
+                table.Column<string>(nameof(MatchPartIndex.ContentItemId));
                 table.Column<string>(nameof(MatchPartIndex.TeamA));
                 table.Column<string>(nameof(MatchPartIndex.TeamAScore));
                 table.Column<string>(nameof(MatchPartIndex.TeamB));
@@ -129,7 +129,7 @@ namespace Sporty.Sports.Migrations
             });
 
             await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
-                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.ContenttemId)}", nameof(MatchPartIndex.ContenttemId))
+                .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.ContentItemId)}", nameof(MatchPartIndex.ContentItemId))
             );
             await SchemaBuilder.AlterTableAsync(nameof(MatchPartIndex), table => table
                 .CreateIndex($"IDX_{nameof(MatchPartIndex)}_{nameof(MatchPartIndex.TeamA)}", nameof(MatchPartIndex.TeamA))
